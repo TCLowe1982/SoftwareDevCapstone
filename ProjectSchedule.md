@@ -3,6 +3,8 @@ Items in *Italics* are secondary requirements that may be dropped due to time co
 
 ## Front End
 
+***
+
 -Login Page
 -User Name
 -Password
@@ -10,6 +12,8 @@ Items in *Italics* are secondary requirements that may be dropped due to time co
 -Create Account (Sign Up/ Sign In)
 
 ### Homepage
+
+***
 
 -Manage Account
     -Change Password
@@ -32,6 +36,8 @@ Items in *Italics* are secondary requirements that may be dropped due to time co
 	
 	
 ## Database – Initially projecting using Firebase
+
+***
 	
 ## Users
 -Access Level
@@ -43,4 +49,9 @@ Items in *Italics* are secondary requirements that may be dropped due to time co
 		
 	
 ## Web App
+
+***
+
 ## Android App
+
+***
