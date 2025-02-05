@@ -20,7 +20,7 @@ Items in *Italics* are secondary requirements that may be dropped due to time co
 		Edit a meeting
 		Set up a meeting recurrence
 	Attendance
-		*Current Meeting attendance
+		* Current Meeting attendance *
 		Past Attendance
 		Records
 		Check In
