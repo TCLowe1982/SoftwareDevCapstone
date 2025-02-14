@@ -118,7 +118,7 @@ form button:hover {
 /* Styling for Register Popup */
 
 .user_registration {
-    display: flex;
+    display: none;
     position: fixed;
     flex-direction: column;
     top: 0;
