@@ -48,6 +48,13 @@ form .input_box {
     margin-bottom: 20px;
 }
 
+/* Check Box Styling, Hopefully */
+form .check_box {
+    position: relative;
+    margin-bottom: 20px;
+
+}
+
 form .input_box label {
     display: block;
     font-weight: 500;
@@ -71,7 +78,7 @@ form .input_box input:focus {
 }
 
 /* Password Link */
-form .input_box .password {
+form .input_box .password{
     display: flex;
     justify-content: space-between;
     text-align: center;
