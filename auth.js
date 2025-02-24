@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function () {
           console.log("User Info:", userCredential.user);
           // if admin = true window.location.href = "websiteDraft/LandingPageAdmin.html";
           // else
-          window.location.href = "dashboard.html"; // Redirect on successful login
+          window.location.href = "userdashboard.html"; // Redirect on successful login
         })
         .catch((error) => {
           alert("Error: " + error.message);
@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", function () {
           })
           .then(() => {
             alert("Registration successful!");
-            window.location.href = "dashboard.html"; // Redirect after successful registration
+            window.location.href = "login.html"; // Redirect after successful registration
           })
           .catch((error) => {
             alert("Database error: " + error.message);
