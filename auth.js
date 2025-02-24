@@ -27,10 +27,13 @@ document.addEventListener("DOMContentLoaded", function () {
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
 
+      //Add to parameters admin
       signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
           alert("Login successful!");
           console.log("User Info:", userCredential.user);
+          // if admin = true window.location.href = "websiteDraft/LandingPageAdmin.html";
+          // else
           window.location.href = "dashboard.html"; // Redirect on successful login
         })
         .catch((error) => {
