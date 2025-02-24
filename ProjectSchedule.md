@@ -5,8 +5,8 @@ Items in *Italics* are secondary requirements that may be dropped due to time co
 
 ***
 
-- Login Page
-- User Name
+- Login Page 
+- User Name 
 - Password
 - Forgot Password 
 - Create Account (Sign Up/ Sign In)
