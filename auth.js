@@ -21,12 +21,16 @@ const database = getDatabase(app);
 // Handle Login
 document.addEventListener("DOMContentLoaded", function () {
   const loginForm = document.querySelector(".login_form form");
+  const errorMessage = document.getElementById("error-message");
+
   if (loginForm) {
     loginForm.addEventListener("submit", function (event) {
       event.preventDefault();
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
       const isAdminLogin = document.getElementById("Admin").checked; 
+
+      errorMessage.style.display = "none"; //Hide error message before each attempt
 
       //Add to parameters admin
       signInWithEmailAndPassword(auth, email, password)
@@ -44,24 +48,33 @@ document.addEventListener("DOMContentLoaded", function () {
                   alert("Welcome Admin!");
                   window.location.href = "LandingPageAdmin.html"
                 } else {
-                  alert("Access denied! You are not an admin.");
+                  errorMessage.textContent = "Access denied! You are not an admin.";
+                  errorMessage.style.display = "block";
+                  //alert("Access denied! You are not an admin.");
                 }
               } else {
                 alert("Login successful!");
                 window.location.href = "userdashboard.html";
               }
             } else {
-              alert("User data not found.");
+              errorMessage.textContent = "User data not found."; 
+              errorMessage.style.display = "block";
+              //alert("User data not found.");
             }
           }).catch((error)=>{
             console.error("Database error:", error);
-            alert("Error retrieving user data.");
+            errorMessage.textContent = "Error retrieving user data.";
+            errorMessage.style.display = "block";
+            //alert("Error retrieving user data.");
           });
           
         })
         .catch((error) => {
-          alert("Error: " + error.message);
+         // alert("Error: " + error.message);
           console.error("Login error:", error);
+          errorMessage.textContent = "Incorrect email or password. Please try again.";
+          errorMessage.style.display = "block";
+
         });
     });
   }

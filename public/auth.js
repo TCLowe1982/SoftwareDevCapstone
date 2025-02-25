@@ -1,7 +1,7 @@
 // Import Firebase modules
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-auth.js";
-import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-database.js";
+import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-database.js";
 
 // Firebase configuration
 const firebaseConfig = {
@@ -26,12 +26,38 @@ document.addEventListener("DOMContentLoaded", function () {
       event.preventDefault();
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
+      const isAdminLogin = document.getElementById("Admin").checked; 
 
+      //Add to parameters admin
       signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
-          alert("Login successful!");
-          console.log("User Info:", userCredential.user);
-          window.location.href = "dashboard.html"; // Redirect on successful login
+          const user = userCredential.user;
+          const userRef = ref(database, "users/" + user.uid);
+
+          get(userRef).then((snapshot) => {
+            if (snapshot.exists()){
+              const userData = snapshot.val();
+
+              //check if the user is an admin
+              if (isAdminLogin){
+                if(userData.isAdmin){
+                  alert("Welcome Admin!");
+                  window.location.href = "LandingPageAdmin.html"
+                } else {
+                  alert("Access denied! You are not an admin.");
+                }
+              } else {
+                alert("Login successful!");
+                window.location.href = "userdashboard.html";
+              }
+            } else {
+              alert("User data not found.");
+            }
+          }).catch((error)=>{
+            console.error("Database error:", error);
+            alert("Error retrieving user data.");
+          });
+          
         })
         .catch((error) => {
           alert("Error: " + error.message);
@@ -54,11 +80,12 @@ document.addEventListener("DOMContentLoaded", function () {
           const user = userCredential.user;
           set(ref(database, "users/" + user.uid), {
             fullName: fullName,
-            email: email
+            email: email,
+            isAdmin: false //Default to false unless manually changed
           })
           .then(() => {
             alert("Registration successful!");
-            window.location.href = "dashboard.html"; // Redirect after successful registration
+            window.location.href = "login.html"; // Redirect after successful registration
           })
           .catch((error) => {
             alert("Database error: " + error.message);
