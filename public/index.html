@@ -17,7 +17,7 @@
       <div class="input_box">
         <div class="password">
           <label for="password">Password</label>
-          <a href="#">Forgot Password?</a>
+          <a href="forgotpassword.html">Forgot Password?</a>
         </div>
         <input type="password" id="password" placeholder="Enter your password" required />
       </div>
@@ -29,11 +29,25 @@
 
        <!-- Login button -->
       <button type="submit">Log In</button>
+      <p id="error-message" class="error_message"></p> <!-- Error message -->
       <p class="sign_up">Don't have an account? <a href="#">Register</a></p>
 
        
     </form>
   </div>
+
+<!--   <div id="error" class="user_error">
+    <div class="popup_content">
+      <span class="close" id="closePopup">&times;</span>
+      <h3>Error</h3>
+      <div class="login_form">
+        <label for="Error">Attention</label>
+        <a href="#">That email is in use.</a>
+
+      </div>
+
+    </div>
+  </div> -->
   
   <div id="register" class="user_registration">
     <div class="popup_content">
@@ -67,6 +81,14 @@
       const registerPopup = document.getElementById("register");
       const registerLink = document.querySelector(".sign_up a");
       const closePopup = document.getElementById("closePopup");
+      const errorPopup = document.getElementById("error")
+      var adminCheckBox = document.getElementById("Admin")
+
+
+
+
+
+
   
       registerLink.addEventListener("click", function(event) {
           event.preventDefault();
