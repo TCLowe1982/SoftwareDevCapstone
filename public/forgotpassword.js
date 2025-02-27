@@ -6,8 +6,9 @@ import { getAuth, sendPasswordResetEmail } from "https://www.gstatic.com/firebas
 const firebaseConfig = {
   apiKey: "AIzaSyCNVT1Er5J62EFfDX2aMX9xcoPFlWYvlto",
   authDomain: "attendance-management-sy-5da6f.firebaseapp.com",
+  databaseURL: "https://attendance-management-sy-5da6f-default-rtdb.firebaseio.com",
   projectId: "attendance-management-sy-5da6f",
-  storageBucket: "attendance-management-sy-5da6f.appspot.com", 
+  storageBucket: "attendance-management-sy-5da6f.firebasestorage.app",
   messagingSenderId: "952625077789",
   appId: "1:952625077789:web:46737dee08f72542f270f4"
 };

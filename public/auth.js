@@ -7,6 +7,7 @@ import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/1
 const firebaseConfig = {
   apiKey: "AIzaSyCNVT1Er5J62EFfDX2aMX9xcoPFlWYvlto",
   authDomain: "attendance-management-sy-5da6f.firebaseapp.com",
+  databaseURL: "https://attendance-management-sy-5da6f-default-rtdb.firebaseio.com",
   projectId: "attendance-management-sy-5da6f",
   storageBucket: "attendance-management-sy-5da6f.firebasestorage.app",
   messagingSenderId: "952625077789",
