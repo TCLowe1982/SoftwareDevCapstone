@@ -2,15 +2,14 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-app.js";
 import { getAuth, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-auth.js";
 
-// Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyCNVT1Er5J62EFfDX2aMX9xcoPFlWYvlto",
-  authDomain: "attendance-management-sy-5da6f.firebaseapp.com",
-  databaseURL: "https://attendance-management-sy-5da6f-default-rtdb.firebaseio.com",
-  projectId: "attendance-management-sy-5da6f",
-  storageBucket: "attendance-management-sy-5da6f.firebasestorage.app",
-  messagingSenderId: "952625077789",
-  appId: "1:952625077789:web:46737dee08f72542f270f4"
+  apiKey: "AIzaSyCGgv9TEVL5OxG-xNZjumABZanVsQ-CgvM",
+  authDomain: "attendance-management-sy-b48d6.firebaseapp.com",
+  databaseURL: "https://attendance-management-sy-b48d6-default-rtdb.firebaseio.com",
+  projectId: "attendance-management-sy-b48d6",
+  storageBucket: "attendance-management-sy-b48d6.firebasestorage.app",
+  messagingSenderId: "746217693554",
+  appId: "1:746217693554:web:d5a2dfb1a00ed98344fdeb"
 };
 
 // Initialize Firebase
