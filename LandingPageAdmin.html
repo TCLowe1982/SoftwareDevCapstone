@@ -7,9 +7,18 @@
     
     <!-- FullCalendar CSS -->
      <!-- This link was dead when I tried to connect to it-->
-    <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.11.3/main.min.css" rel="stylesheet"> -->
-    <link rel="stylesheet" href="stylesheet.css">
-
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.11.3/main.min.css" rel="stylesheet">
+    
+    <style>
+        #calendar {
+            max-width: 900px;
+            margin: 40px auto;
+        }
+        #qrcode {
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
 </head>
 <div class="header">
 
@@ -53,13 +62,47 @@
         document.addEventListener('DOMContentLoaded', function() {
             var calendarEl = document.getElementById('calendar');
             
-            
-            
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'timeGridWeek',
                 selectable: true,
                 allDaySlot: false,
                 slotDuration: '00:30:00',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'timeGridWeek,timeGridDay addEventButton'
+                },
+                customButtons: {
+                    addEventButton: {
+                        text: '+',
+                        click: function() {
+                            var title = prompt('Enter Event Title:');
+                            var dateStr = prompt('Enter Date (YYYY-MM-DD):');
+                            var timeStr = prompt('Enter Time (HH:MM):');
+                            var dateTimeStr = dateStr + 'T' + timeStr + ':00'; // Combine date and time
+                            var date = new Date(dateTimeStr);
+
+                            if (title && !isNaN(date)) {
+                                calendar.addEvent({
+                                    title: title,
+                                    start: date,
+                                    allDay: false
+                                });
+                                console.log('Event added:', { title: title, start: date });
+                                alert('Event added successfully!');
+                            } else {
+                                alert('Invalid date or time.');
+                            }
+                        }
+                    }
+                },
+                events: [
+                    {
+                        title: 'Click for Google',
+                        url: 'http://google.com/',
+                        start: '2025-03-21'
+                    }
+                ],
                 dateClick: function(info) {
                     generateQRCode(info.dateStr);
                 }
