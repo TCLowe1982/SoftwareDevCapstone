@@ -7,33 +7,42 @@
     
     <!-- FullCalendar CSS -->
      <!-- This link was dead when I tried to connect to it-->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.11.3/main.min.css" rel="stylesheet">
-    
-    <style>
-        #calendar {
-            max-width: 900px;
-            margin: 40px auto;
-        }
-        #qrcode {
-            margin-top: 20px;
-            text-align: center;
-        }
-    </style>
+    <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.11.3/main.min.css" rel="stylesheet"> -->
+    <link rel="stylesheet" href="stylesheet.css">
+
 </head>
-<body>
+<div class="header">
+
     <h1>Administration Pages</h1>
     
-    <a href="websiteDraft/EventHistory.html">Event History</a>
-    <a href="websiteDraft/addEvent.html">
-        <img src="websiteDraft/add-6491203_1280.png" height="50px" width="50px" alt="Create an Event">
-    </a>
-    <a href="websiteDraft/editEvent.html">
-        <img src="websiteDraft/pencil-161946_1280.png" height="50px" width="50px" alt="Edit an Event">
-    </a>
 
-    <h2>Event Scheduler</h2>
-    <div id="calendar"></div>
-    <div id="qrcode"></div>
+    <div class="nav">
+        <a href="websiteDraft/EventHistory.html">Event History</a>
+        <a href="websiteDraft/addEvent.html">
+            <img src="websiteDraft/add-6491203_1280.png" height="50px" width="50px" alt="Create an Event">
+        </a>
+        <a href="websiteDraft/editEvent.html">
+            <img src="websiteDraft/pencil-161946_1280.png" height="50px" width="50px" alt="Edit an Event">
+        </a>
+            
+        <a href="userdashboard.html">User Dashboard</a>
+        <a href="Login.html">Log Out</a>
+
+    </div>
+<body>
+
+    
+
+    <div class="container">
+        <h2>Event Scheduler</h2>
+    
+        <div id="calendar"></div>
+        <div id="qrcode"></div>
+        
+    </div>
+
+
+
 
     <!-- Load FullCalendar JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.11.3/main.min.js"></script>
