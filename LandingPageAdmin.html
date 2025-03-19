@@ -10,7 +10,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.11.3/main.min.css" rel="stylesheet">
     
     <style>
-        #calendar {
+        #calendar { 
             max-width: 900px;
             margin: 40px auto;
         }
@@ -58,7 +58,11 @@
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@6.1.15/index.global.min.js'></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
-    <script>
+    <!-- Import eventStorage.js to store event data -->
+    <script type="module" src="eventStorage.js"></script>
+
+    <script type = "module">
+        import { storeEvent } from "./eventStorage.js";
         document.addEventListener('DOMContentLoaded', function() {
             var calendarEl = document.getElementById('calendar');
             
@@ -82,7 +86,8 @@
                             var dateTimeStr = dateStr + 'T' + timeStr + ':00'; // Combine date and time
                             var date = new Date(dateTimeStr);
 
-                            if (title && !isNaN(date)) {
+                            if (title && dateStr && timeStr) {
+                                storeEvent(title, dateTimeStr);
                                 calendar.addEvent({
                                     title: title,
                                     start: date,
@@ -96,16 +101,6 @@
                         }
                     }
                 },
-                events: [
-                    {
-                        title: 'Click for Google',
-                        url: 'http://google.com/',
-                        start: '2025-03-21'
-                    }
-                ],
-                dateClick: function(info) {
-                    generateQRCode(info.dateStr);
-                }
             });
             calendar.render();
         });
