@@ -19,6 +19,29 @@
             margin-top: 20px;
             text-align: center;
         }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.4);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+        }
+        .modal input, .modal button {
+            display: block;
+            width: 100%;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <div class="header">
@@ -50,8 +73,23 @@
         <div id="qrcode"></div>
         
     </div>
-
-
+   
+    <div id="eventModal" class="modal">
+        <div class="modal-content">
+            <h3>Add Event</h3>
+            <input type="text" id="eventTitle" placeholder="Event Name">
+            <input type="date" id="eventDate">
+            <input type="time" id="startTime" placeholder="Start Time">
+            <input type="time" id="endTime" placeholder="End Time">
+            <input type="text" id="eventLocation" placeholder="Location">
+            <label>
+                <input type="checkbox" id="allDay"> All Day
+            </label>
+            <button id="saveEvent">Save Event</button>
+            <button onclick="closeModal()">Cancel</button>
+        </div>
+    </div>
+    
 
 
     <!-- Load FullCalendar JS -->
@@ -64,56 +102,61 @@
 
     <script type = "module">
         import { storeEvent } from "./eventStorage.js";
-        document.addEventListener('DOMContentLoaded', function() {
-            var calendarEl = document.getElementById('calendar');
-            
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'timeGridWeek',
-                selectable: true,
-                allDaySlot: false,
-                slotDuration: '00:30:00',
-                headerToolbar: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'timeGridWeek,timeGridDay addEventButton'
-                },
-                customButtons: {
-                    addEventButton: {
-                        text: '+',
-                        click: function() {
-                            var title = prompt('Enter Event Title:');
-                            var dateStr = prompt('Enter Date (YYYY-MM-DD):');
-                            var timeStr = prompt('Enter Time (HH:MM):');
-                            var dateTimeStr = dateStr + 'T' + timeStr + ':00'; // Combine date and time
-                            var date = new Date(dateTimeStr);
+        document.addEventListener('DOMContentLoaded', function () {
+    var calendarEl = document.getElementById('calendar');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'timeGridWeek',
+        selectable: true,
+        allDaySlot: false,
+        slotDuration: '00:30:00',
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'timeGridWeek,timeGridDay addEventButton'
+        },
+        customButtons: {
+            addEventButton: {
+                text: '+',
+                click: function () {
+                    document.getElementById('eventModal').style.display = 'flex';
+                }
+            }
+        },
+    });
+    calendar.render();
 
-                            if (title && dateStr && timeStr) {
-                                storeEvent(title, dateTimeStr);
-                                calendar.addEvent({
-                                    title: title,
-                                    start: date,
-                                    allDay: false
-                                });
-                                console.log('Event added:', { title: title, start: date });
-                                alert('Event added successfully!');
-                            } else {
-                                alert('Invalid date or time.');
-                            }
-                        }
-                    }
-                },
-            });
-            calendar.render();
-        });
+    document.getElementById('saveEvent').addEventListener('click', function () {
+        var title = document.getElementById('eventTitle').value;
+        var date = document.getElementById('eventDate').value;
+        var startTime = document.getElementById('startTime').value;
+        var endTime = document.getElementById('endTime').value;
+        var location = document.getElementById('eventLocation').value;
+        var allDay = document.getElementById('allDay').checked;
 
-        function generateQRCode(eventDateTime) {
-            document.getElementById("qrcode").innerHTML = "";
-            new QRCode(document.getElementById("qrcode"), {
-                text: `Event Date & Time: ${eventDateTime}`,
-                width: 128,
-                height: 128
+        if (title && date && (allDay || (startTime && endTime)) && location) {
+            var startDateTime = allDay ? date : `${date}T${startTime}`;
+            var endDateTime = allDay ? date : `${date}T${endTime}`;
+
+            storeEvent(title, startDateTime, endDateTime, location);  // Save event data
+            calendar.addEvent({
+                title: `${title} @ ${location}`,
+                start: startDateTime,
+                end: endDateTime,
+                allDay: allDay
             });
+
+            alert('Event added successfully!');
+            closeModal();
+        } else {
+            alert('Please fill all fields.');
         }
+    });
+});
+
+function closeModal() {
+    document.getElementById('eventModal').style.display = 'none';
+}
+
     </script>
 </body>
-</html> 
+</html>
