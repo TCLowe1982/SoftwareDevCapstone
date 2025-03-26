@@ -19,3 +19,48 @@
 </body>
 </html>
 
+<script>
+const eventsAttended = [
+    {
+        name: "Deluce Gallery: Artaxis National Juried Exhibition",
+        date: "March 10, 2025",
+        details: "The Artaxis National Juried Exhibition will highlight contemporary ceramics created by various artists."
+    },
+    {
+        name: "Women's Leadership Summit",
+        date: "July 22, 2025",
+        details: "The EmpowerHER Summit is dedicated to fostering leadership by bringing together women in leadership roles and those aspiring to lead."
+    },
+    {
+        name: "Northwest Week: Picnic Palooza",
+        date: "September 5, 2025",
+        details: "Join the Student Activities Council as it continues Northwest Week activities with a Picnic Palooza, featuring several food trucks offering free food, including El Nopal and Kool Kats."
+    }
+];
+
+function createEventCard(event) {
+    return `
+        <li class="flip-card">
+            <div class="flip-card-inner">
+                <!-- Front of the card -->
+                <div class="flip-card-front">
+                    <h3>${event.name}</h3>
+                    <p>${event.date}</p>
+                </div>
+                <!-- Back of the card -->
+                <div class="flip-card-back">
+                    <h3>Details</h3>
+                    <p>${event.details}</p>
+                </div>
+            </div>
+        </li>
+    `;
+}
+
+function renderEvents() {
+    const eventList = document.getElementById("event-list");
+    eventList.innerHTML = eventsAttended.map(createEventCard).join("");
+}
+
+document.addEventListener("DOMContentLoaded", renderEvents);
+</script>
