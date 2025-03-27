@@ -67,29 +67,53 @@
     <script type="module" src="../JS/eventStorage.js"></script>
 
     <script type = "module">
-        import { storeEvent } from "../JS/eventStorage.js";
-        document.addEventListener('DOMContentLoaded', function () {
-    var calendarEl = document.getElementById('calendar');
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'timeGridWeek',
-        selectable: true,
-        allDaySlot: false,
-        slotDuration: '00:30:00',              
-        height: 'auto',                 
-        headerToolbar: {
-            left: 'prev,next today',
-            center: 'title',
-            right: 'timeGridWeek,timeGridDay addEventButton'
-        },
-        customButtons: {
-            addEventButton: {
-                text: '+',
-                click: function () {
-                    document.getElementById('eventModal').style.display = 'flex';
+        import { storeEvent, fetchEvents } from "../JS/eventStorage.js";
+        document.addEventListener('DOMContentLoaded', async function () {
+            const storedEvents = await fetchEvents();
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'timeGridWeek',
+                events: storedEvents.map(event => ({
+                    title: event.title,
+                    start: event.dateTime,
+                    allDay: false
+                })),
+                selectable: true,
+                allDaySlot: false,
+                slotDuration: '00:30:00',              
+                height: 'auto',                 
+                headerToolbar: {
+
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay addEventButton'
+                 },
+            customButtons: {
+                addEventButton: {
+                    text: '+',
+                    click: function () {
+                        document.getElementById('eventModal').style.display = 'flex';
+                        setTimeout(() => {
+                            document.getElementById('eventTitle').value = '';
+                            document.getElementById('eventDate').value = '';
+                            document.getElementById('startTime').value = '';
+                            document.getElementById('endTime').value = '';
+                            document.getElementById('eventLocation').value = '';
+                            document.getElementById('allDay').checked = false;
+
+                            document.getElementById('eventModal').style.display = 'flex';
+                        }, 0);
+                     }
                 }
-            }
-        },
-    });
+            },
+        });
+
+    //Cancel button
+    function closeModal() {
+        document.getElementById('eventModal').style.display = 'none';
+    }
+    window.closeModal = closeModal;
+
     calendar.render();
 
     document.getElementById('saveEvent').addEventListener('click', function () {

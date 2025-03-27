@@ -18,12 +18,14 @@ const db = getDatabase(app);
 
 // Function to store event in Firebase
 function storeEvent(eventTitle, eventDateTime) {
+    const adminId = localStorage.getItem("adminId");
     const eventsRef = ref(db, 'events');  
     const newEventRef = push(eventsRef); // Generate unique key
 
     set(newEventRef, {
         title: eventTitle,
-        dateTime: eventDateTime
+        dateTime: eventDateTime,
+        adminId: adminId 
     })
     .then(() => {
         console.log("Event stored successfully in Firebase!");
@@ -37,14 +39,14 @@ function storeEvent(eventTitle, eventDateTime) {
 
 // Function to retrieve events from Firebase
 async function fetchEvents() {
+    const adminId = localStorage.getItem("adminId");
     const eventsRef = ref(db, 'events');
     try {
         const snapshot = await get(eventsRef);
         if (snapshot.exists()) {
             const events = snapshot.val();
-            return Object.values(events); // Convert object to array
+            return Object.values(events).filter(event => event.adminId === adminId);
         } else {
-            console.log("No events found.");
             return [];
         }
     } catch (error) {
