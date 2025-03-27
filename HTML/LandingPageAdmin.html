@@ -5,75 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Administration Panel</title>
     
-    <!-- FullCalendar CSS -->
-     <!-- This link was dead when I tried to connect to it-->
+    <!-- FullCalendar CSS -->   
     <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.11.3/main.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="stylesheet.css">
+    <link rel="stylesheet" href="../CSS/calendar.css">
     
-    <style>
-        #calendar { 
-            max-width: 900px;
-            margin: 40px auto;
-        }
-        #qrcode {
-            margin-top: 20px;
-            text-align: center;
-        }
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.4);
-            justify-content: center;
-            align-items: center;
-        }
-        .modal-content {
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            width: 300px;
-        }
-        .modal input, .modal button {
-            display: block;
-            width: 100%;
-            margin-top: 10px;
-        }
-    </style>
 </head>
-<div class="header">
-
-    <h1>Administration Pages</h1>
-    
-
-    <div class="nav">
-        <a href="websiteDraft/EventHistory.html">Event History</a>
-        <a href="websiteDraft/addEvent.html">
-            <img src="websiteDraft/add-6491203_1280.png" height="50px" width="50px" alt="Create an Event">
-        </a>
-        <a href="websiteDraft/editEvent.html">
-            <img src="websiteDraft/pencil-161946_1280.png" height="50px" width="50px" alt="Edit an Event">
-        </a>
-            
-        <a href="userdashboard.html">User Dashboard</a>
-        <a href="Login.html">Log Out</a>
-
-    </div>
 <body>
 
-    
+    <!--Side Bar-->
+    <div class="sidebar">
+        <a href="admindashboard.html">Admin Dashboard</a>
+        <a href="../HTML/EventHistory.html">Event History</a>
+        <a href="Login.html">Log Out</a>
+      </div>
+      
+      <!-- Main Content -->
+      <div class="content">
+        <div class="header">
+            <h1 class="header-title">CALENDAR VIEW</h1>
+        <div class = "header-actions">
+          <a href="../HTML/addEvent.html" class = "action-link">
+            <img src="../Images/add-6491203_1280.png" height="20px" width="20px" alt="Add Event">
+            <span>Add Event</span>
+          </a>
+          <a href="editEvent.html" class = "action-link">
+            <img src="../Images/pencil-161946_1280.png" height="22px" width="20px" alt="Edit Event">
+            <span>Edit Event</span>
+          </a>
+        </div>
+        </div>
+      
+        <div class="container">
+          <div id="calendar"></div>
+        </div>
+      </div>
 
-    <div class="container">
-        <h2>Event Scheduler</h2>
-    
-        <div id="calendar"></div>
-        <div id="qrcode"></div>
-        
-    </div>
-   
     <div id="eventModal" class="modal">
         <div class="modal-content">
             <h3>Add Event</h3>
@@ -98,17 +64,18 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
     <!-- Import eventStorage.js to store event data -->
-    <script type="module" src="eventStorage.js"></script>
+    <script type="module" src="../JS/eventStorage.js"></script>
 
     <script type = "module">
-        import { storeEvent } from "./eventStorage.js";
+        import { storeEvent } from "../JS/eventStorage.js";
         document.addEventListener('DOMContentLoaded', function () {
     var calendarEl = document.getElementById('calendar');
     var calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'timeGridWeek',
         selectable: true,
         allDaySlot: false,
-        slotDuration: '00:30:00',
+        slotDuration: '00:30:00',              
+        height: 'auto',                 
         headerToolbar: {
             left: 'prev,next today',
             center: 'title',
