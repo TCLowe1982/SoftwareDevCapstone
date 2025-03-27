@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", function () {
               if (isAdminLogin){
                 if(userData.isAdmin){
                   alert("Welcome Admin!");
-                  window.location.href = "LandingPageAdmin.html"
+                  window.location.href = "../HTML/LandingPageAdmin.html"
                 } else {
                   errorMessage.textContent = "Access denied! You are not an admin.";
                   errorMessage.style.display = "block";
@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
               } else {
                 alert("Login successful!");
-                window.location.href = "userdashboard.html";
+                window.location.href = "../HTML/userdashboard.html";
               }
             } else {
               errorMessage.textContent = "User data not found."; 
@@ -98,7 +98,7 @@ document.addEventListener("DOMContentLoaded", function () {
           })
           .then(() => {
             alert("Registration successful!");
-            window.location.href = "login.html"; // Redirect after successful registration
+            window.location.href = "../HTML/login.html"; // Redirect after successful registration
           })
           .catch((error) => {
             alert("Database error: " + error.message);
