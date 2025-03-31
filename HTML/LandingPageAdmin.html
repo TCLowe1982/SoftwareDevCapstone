@@ -16,7 +16,7 @@
     <div class="sidebar">
         <a href="admindashboard.html">Admin Dashboard</a>
         <a href="../HTML/EventHistory.html">Event History</a>
-        <a href="Login.html">Log Out</a>
+        <a href="../HTML/Login.html">Log Out</a>
       </div>
       
       <!-- Main Content -->
@@ -24,7 +24,7 @@
         <div class="header">
             <h1 class="header-title">CALENDAR VIEW</h1>
         <div class = "header-actions">
-          <a href="../HTML/addEvent.html" class = "action-link">
+          <a href="#" id="openEventModal" class = "action-link">
             <img src="../Images/add-6491203_1280.png" height="20px" width="20px" alt="Add Event">
             <span>Add Event</span>
           </a>
@@ -64,7 +64,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
     <!-- Import eventStorage.js to store event data -->
-    <script type="module" src="../JS/eventStorage.js"></script>
 
     <script type = "module">
         import { storeEvent, fetchEvents } from "../JS/eventStorage.js";
@@ -92,29 +91,18 @@
                 addEventButton: {
                     text: '+',
                     click: function () {
-                        document.getElementById('eventModal').style.display = 'flex';
-                        setTimeout(() => {
-                            document.getElementById('eventTitle').value = '';
-                            document.getElementById('eventDate').value = '';
-                            document.getElementById('startTime').value = '';
-                            document.getElementById('endTime').value = '';
-                            document.getElementById('eventLocation').value = '';
-                            document.getElementById('allDay').checked = false;
-
-                            document.getElementById('eventModal').style.display = 'flex';
-                        }, 0);
+                        openModal();
                      }
                 }
             },
         });
 
-    //Cancel button
-    function closeModal() {
-        document.getElementById('eventModal').style.display = 'none';
-    }
-    window.closeModal = closeModal;
-
     calendar.render();
+
+    document.getElementById('openEventModal').addEventListener('click', function (e) {
+        e.preventDefault();
+        openModal();
+    });
 
     document.getElementById('saveEvent').addEventListener('click', function () {
         var title = document.getElementById('eventTitle').value;
@@ -144,10 +132,23 @@
     });
 });
 
-function closeModal() {
-    document.getElementById('eventModal').style.display = 'none';
-}
+            function openModal() {
+            document.getElementById('eventModal').style.display = 'flex';
+            document.getElementById('eventTitle').value = '';
+            document.getElementById('eventDate').value = '';
+            document.getElementById('startTime').value = '';
+            document.getElementById('endTime').value = '';
+            document.getElementById('eventLocation').value = '';
+            document.getElementById('allDay').checked = false;
+        }
 
+        function closeModal() {
+            document.getElementById('eventModal').style.display = 'none';
+        }
+
+        // Make closeModal accessible globally
+        window.closeModal = closeModal;
+        
     </script>
 </body>
 </html>
