@@ -11,14 +11,120 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="stylesheet.css">
+        <!-- Include QR code library -->
+        <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+        <style>
+            .qr-container {
+                margin: 20px;
+                padding: 20px;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                max-width: 500px;
+            }
+            .input-group {
+                margin-bottom: 15px;
+            }
+            label {
+                display: block;
+                margin-bottom: 5px;
+                font-weight: bold;
+            }
+            input, button {
+                padding: 8px;
+                font-size: 16px;
+            }
+            button {
+                background-color: #4CAF50;
+                color: white;
+                border: none;
+                cursor: pointer;
+                margin-top: 10px;
+            }
+            button:hover {
+                background-color: #45a049;
+            }
+            #qrcode {
+                margin-top: 20px;
+            }
+            .hash-result {
+                margin-top: 15px;
+                padding: 10px;
+                background-color: #f5f5f5;
+                border-radius: 4px;
+                word-wrap: break-word;
+            }
+        </style>
     </head>
     <body>
         <!--[if lt IE 7]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
-        <p>The calander should go on this page. Feel free to treat this as a comment, and delete it when you are ready.
-            <br> 
-            I'm sending the edit button to this page for now, change that after we have the calender added.</p>
-        <script src="" async defer></script>
+        <div class="qr-container">
+            <h1>QR Code Generator with Hash Verification</h1>
+            
+            <div class="input-group">
+                <label for="dataInput">Enter data to encode:</label>
+                <input type="text" id="dataInput" placeholder="Enter text or URL">
+            </div>
+            
+            <button onclick="generateQRCode()">Generate QR Code</button>
+            <button onclick="generateHash()">Generate Hash</button>
+            
+            <div class="hash-result" id="hashOutput"></div>
+            
+            <div id="qrcode"></div>
+        </div>
+
+        <script>
+            // Simple hash function (using SHA-256 for better security)
+            async function generateHash() {
+                const input = document.getElementById('dataInput').value;
+                if (!input) {
+                    alert('Please enter some data first');
+                    return;
+                }
+                
+                // Encode as UTF-8
+                const msgBuffer = new TextEncoder().encode(input);
+                
+                // Hash the data (using Web Crypto API)
+                const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+                
+                // Convert to hex string
+                const hashArray = Array.from(new Uint8Array(hashBuffer));
+                const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+                
+                document.getElementById('hashOutput').innerHTML = 
+                    `<strong>SHA-256 Hash:</strong> ${hashHex}`;
+                
+                return hashHex;
+            }
+            
+            // Generate QR code with optional hash
+            async function generateQRCode() {
+                const input = document.getElementById('dataInput').value;
+                if (!input) {
+                    alert('Please enter some data first');
+                    return;
+                }
+                
+                // Clear previous QR code
+                document.getElementById('qrcode').innerHTML = '';
+                
+                // Generate hash and include it in the QR data
+                const hash = await generateHash();
+                const qrData = `${input}|hash:${hash}`;
+                
+                // Generate QR code
+                new QRCode(document.getElementById('qrcode'), {
+                    text: qrData,
+                    width: 200,
+                    height: 200,
+                    colorDark: "#000000",
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.H
+                });
+            }
+        </script>
     </body>
 </html>
