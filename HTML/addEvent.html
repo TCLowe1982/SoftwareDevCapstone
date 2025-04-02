@@ -116,10 +116,11 @@
             
             // Load events from Firebase
             document.addEventListener('DOMContentLoaded', function() {
-                try {
+                // Check if Firebase is initialized in eventStorage.js
+                if (typeof loadEvents === 'function') {
                     loadEventsForQR();
-                } catch (error) {
-                    console.error('Error loading events:', error);
+                } else {
+                    console.error('Firebase functionality not found. Make sure eventStorage.js is properly loaded.');
                 }
             });
 
