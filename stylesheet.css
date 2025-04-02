@@ -35,21 +35,10 @@ body {
     padding: 20px;
 }
 
-.disclaimer {
-    position: absolute;
-    top: 10px;
-    right: 20px;
-    background-color: rgba(255, 255, 255, 0.8);
-    padding: 5px 10px;
-    border-radius: 5px;
-    font-size: 12px;
-    font-weight: bold;
-    color: red;
-  }
-  
+
 .container {
     width: 90%;
-    max-width: 1200px;
+    max-width: 1800px;
     background: white;
     padding: 20px;
     border-radius: 8px;
@@ -66,7 +55,7 @@ a {
 }
 
 #calendar {
-    max-width: 900px;
+    max-width: 1600px;
     margin: 40px auto;
 }
 
@@ -192,7 +181,6 @@ form button:hover {
 }
 
 
-
 /* Styling for Register Popup */
 
 .user_registration {
@@ -206,47 +194,6 @@ form button:hover {
     background: rgba(0, 0, 0, 0.4);
     justify-content: center;
     align-items: center;
-}
-/* ========================== */
-/* EVENT MODAL DESCRIPTION BOX */
-/* ========================== */
-
-/* Description Container */
-.event-description-container {
-    margin: 20px 0;
-}
-
-/* Label (matches your form label style) */
-.event-description-container label {
-    display: block;
-    font-weight: 600;
-    margin-bottom: 10px;
-    color: #333;
-    font-size : 15px;
-}
-
-
-#eventDescription {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #DADAF2;
-    border-radius: 5px;
-    background: #F8F8FB;
-    font-family: "Montserrat", sans-serif;
-    font-size: 15px;
-    min-height: 120px;
-    resize: vertical;
-    transition: border-color 0.2s ease;
-    line-height: 1.5;
-}
-
-#eventDescription:focus {
-    border-color: #626cd6;
-    outline: none;
-}
-#eventDescription::placeholder {
-    color: #aaa; /* Lighter placeholder text */
-    font-weight: 400;
 }
 
 .popup_content {

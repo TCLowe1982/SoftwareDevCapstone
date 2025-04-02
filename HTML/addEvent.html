@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
@@ -11,14 +12,198 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="stylesheet.css">
+        <script src="JS/eventStorage.js"></script>
+        <!-- Include QR code library -->
+        <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+        <style>
+            .qr-container {
+                margin: 20px;
+                padding: 20px;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                max-width: 500px;
+            }
+            .input-group {
+                margin-bottom: 15px;
+            }
+            label {
+                display: block;
+                margin-bottom: 5px;
+                font-weight: bold;
+            }
+            input, button {
+                padding: 8px;
+                font-size: 16px;
+            }
+            button {
+                background-color: #4CAF50;
+                color: white;
+                border: none;
+                cursor: pointer;
+                margin-top: 10px;
+            }
+            button:hover {
+                background-color: #45a049;
+            }
+            #qrcode {
+                margin-top: 20px;
+            }
+            .hash-result {
+                margin-top: 15px;
+                padding: 10px;
+                background-color: #f5f5f5;
+                border-radius: 4px;
+                word-wrap: break-word;
+            }
+        </style>
+        <script type="module">
+            import { fetchEvents } from '../JS/eventStorage.js';
+            window.fetchEvents = fetchEvents; // Make it accessible to non-module scripts
+        </script>
     </head>
     <body>
         <!--[if lt IE 7]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
-        <p>The calander should go on this page. Feel free to treat this as a comment, and delete it when you are ready.
-            <br> 
-            I'm sending the edit button to this page for now, change that after we have the calender added.</p>
-        <script src="" async defer></script>
+        <div class="qr-container">
+            <h1>QR Code Generator with Hash Verification</h1>
+            
+            <div class="input-group">
+                <label for="dataInput">Enter data to encode:</label>
+                <input type="text" id="dataInput" placeholder="Enter text or URL">
+            </div>
+            
+            <div class="input-group">
+                <label for="eventSelect">Select Event:</label>
+                <select id="eventSelect">
+                    <option value="">-- Select an event --</option>
+                    <!-- Events will be populated from Firebase -->
+                </select>
+            </div>
+            
+            <button onclick="generateQRCode()">Generate QR Code</button>
+            <button onclick="generateHash()">Generate Hash</button>
+            
+            <div class="hash-result" id="hashOutput"></div>
+            
+            <div id="qrcode"></div>
+        </div>
+
+        <script>
+            // Simple hash function (using SHA-256 for better security)
+            async function generateHash() {
+                const input = document.getElementById('dataInput').value;
+                if (!input) {
+                    alert('Please enter some data first');
+                    return;
+                }
+                
+                // Encode as UTF-8
+                const msgBuffer = new TextEncoder().encode(input);
+                
+                // Hash the data (using Web Crypto API)
+                const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+                
+                // Convert to hex string
+                const hashArray = Array.from(new Uint8Array(hashBuffer));
+                const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+                
+                document.getElementById('hashOutput').innerHTML = 
+                    `<strong>SHA-256 Hash:</strong> ${hashHex}`;
+                
+                return hashHex;
+            }
+            
+            // Load events from Firebase
+            document.addEventListener('DOMContentLoaded', function() {
+                // Check if Firebase is initialized in eventStorage.js
+                if (typeof loadEvents === 'function') {
+                    loadEventsForQR();
+                } else {
+                    console.error('Firebase functionality not found. Make sure eventStorage.js is properly loaded.');
+                }
+            });
+
+            // Function to load events from Firebase into the dropdown
+            async function loadEventsForQR() {
+                const eventSelect = document.getElementById('eventSelect');
+                
+                try {
+                    // Clear existing options except the default one
+                    while (eventSelect.options.length > 1) {
+                        eventSelect.remove(1);
+                    }
+                    
+                    // Use the fetchEvents function from your module
+                    const events = await fetchEvents();
+                    
+                    if (events && events.length > 0) {
+                        events.forEach((event, index) => {
+                            const option = document.createElement('option');
+                            option.value = index; // Using index as a simple identifier
+                            option.dataset.eventData = JSON.stringify(event); // Store full event data
+                            option.textContent = event.title;
+                            eventSelect.appendChild(option);
+                        });
+                    } else {
+                        console.log("No events found or user not logged in");
+                        const option = document.createElement('option');
+                        option.textContent = "No events available";
+                        option.disabled = true;
+                        eventSelect.appendChild(option);
+                    }
+                } catch (error) {
+                    console.error("Error loading events:", error);
+                }
+            }
+
+            // Generate QR code with optional hash
+            async function generateQRCode() {
+                const input = document.getElementById('dataInput').value;
+                const eventSelect = document.getElementById('eventSelect');
+                const selectedIndex = eventSelect.selectedIndex;
+                
+                if (!input) {
+                    alert('Please enter some data first');
+                    return;
+                }
+                
+                if (selectedIndex <= 0) {
+                    alert('Please select an event');
+                    return;
+                }
+                
+                // Get the selected option and its stored event data
+                const selectedOption = eventSelect.options[selectedIndex];
+                const eventData = JSON.parse(selectedOption.dataset.eventData);
+                
+                // Clear previous QR code
+                document.getElementById('qrcode').innerHTML = '';
+                
+                // Generate hash
+                const hash = await generateHash();
+                
+                // Create QR data with event reference
+                const qrData = JSON.stringify({
+                    input: input,
+                    event: {
+                        title: eventData.title,
+                        dateTime: eventData.dateTime,
+                        adminId: eventData.adminId
+                    },
+                    hash: hash
+                });
+                
+                // Generate QR code
+                new QRCode(document.getElementById('qrcode'), {
+                    text: qrData,
+                    width: 200,
+                    height: 200,
+                    colorDark: "#000000",
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.H
+                });
+            }
+        </script>
     </body>
 </html>
