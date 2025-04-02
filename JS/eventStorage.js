@@ -32,8 +32,6 @@ function getCurrentUser() {
 
 // Function to store event in Firebase
 async function storeEvent(eventTitle, startDateTime, endDateTime, location, description) {
-    const user = auth.currentUser;
-
     try{
     const user = await getCurrentUser();
     const adminId = user.uid;
