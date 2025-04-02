@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Administration Panel</title>
     
-    <!-- FullCalendar CSS -->   
+    <!-- FullCalendar CSS -->  
     <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.11.3/main.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../CSS/calendar.css">
     
@@ -73,8 +73,9 @@
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'timeGridWeek',
                 events: storedEvents.map(event => ({
-                    title: event.title,
-                    start: event.dateTime,
+                    title: `${event.title} @ ${event.location}`,
+                    start: event.startDateTime,
+                    end: event.endDateTime,
                     allDay: false
                 })),
                 selectable: true,
@@ -123,8 +124,6 @@
                 end: endDateTime,
                 allDay: allDay
             });
-
-            alert('Event added successfully!');
             closeModal();
         } else {
             alert('Please fill all fields.');
@@ -148,7 +147,7 @@
 
         // Make closeModal accessible globally
         window.closeModal = closeModal;
-        
+
     </script>
 </body>
 </html>

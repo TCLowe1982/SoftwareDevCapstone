@@ -45,7 +45,6 @@ document.addEventListener("DOMContentLoaded", function () {
               //check if the user is an admin
               if (isAdminLogin){
                 if(userData.isAdmin){
-                  alert("Welcome Admin!");
                   localStorage.setItem("adminId", user.uid);
                   window.location.href = "../HTML/LandingPageAdmin.html"
                 } else {

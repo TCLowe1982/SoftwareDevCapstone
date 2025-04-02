@@ -1,5 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-app.js";
 import { getDatabase, ref, push, set, get, child } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-database.js";  
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-auth.js"
 
 // Firebase Configuration
 const firebaseConfig = {
@@ -14,38 +15,58 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+const auth = getAuth();
 const db = getDatabase(app);
 
+function getCurrentUser() {
+    return new Promise((resolve, reject) => {
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                resolve(user);
+            } else {
+                reject(new Error("User not authenticated. Please log in."));
+            }
+        });
+    });
+}
+
 // Function to store event in Firebase
-function storeEvent(eventTitle, eventDateTime) {
-    const adminId = localStorage.getItem("adminId");
+async function storeEvent(eventTitle, startDateTime, endDateTime, location) {
+    const user = auth.currentUser;
+
+    try{
+    const user = await getCurrentUser();
+    const adminId = user.uid;
     const eventsRef = ref(db, 'events');  
     const newEventRef = push(eventsRef); // Generate unique key
 
-    set(newEventRef, {
+    await set(newEventRef, {
         title: eventTitle,
-        dateTime: eventDateTime,
-        adminId: adminId 
+        startDateTime: startDateTime,
+        endDateTime: endDateTime,
+        location: location,
+        createdBy: adminId
     })
-    .then(() => {
+
         console.log("Event stored successfully in Firebase!");
-        alert("Event saved to database!");
-    })
-    .catch(error => {
+
+    }catch(error) {
         console.error("Error storing event: ", error);
         alert("Failed to save event.");
-    });
+    }
 }
 
 // Function to retrieve events from Firebase
 async function fetchEvents() {
-    const adminId = localStorage.getItem("adminId");
+    try{
+    const user = await getCurrentUser();
+    const adminId = user.uid;
     const eventsRef = ref(db, 'events');
-    try {
-        const snapshot = await get(eventsRef);
-        if (snapshot.exists()) {
-            const events = snapshot.val();
-            return Object.values(events).filter(event => event.adminId === adminId);
+    const snapshot = await get(eventsRef);
+        
+    if (snapshot.exists()) {
+        const events = snapshot.val();
+        return Object.values(events).filter(event => event.createdBy === adminId);
         } else {
             return [];
         }
