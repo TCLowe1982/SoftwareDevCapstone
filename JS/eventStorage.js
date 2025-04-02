@@ -31,7 +31,7 @@ function getCurrentUser() {
 }
 
 // Function to store event in Firebase
-async function storeEvent(eventTitle, startDateTime, endDateTime, location) {
+async function storeEvent(eventTitle, startDateTime, endDateTime, location, description) {
     const user = auth.currentUser;
 
     try{
@@ -45,7 +45,8 @@ async function storeEvent(eventTitle, startDateTime, endDateTime, location) {
         startDateTime: startDateTime,
         endDateTime: endDateTime,
         location: location,
-        createdBy: adminId
+        description: description,
+        createdBy: adminId,
     })
 
         console.log("Event stored successfully in Firebase!");
