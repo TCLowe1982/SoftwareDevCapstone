@@ -66,12 +66,7 @@
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
         <div class="qr-container">
-            <h1>QR Code Generator with Hash Verification</h1>
-            
-            <div class="input-group">
-                <label for="dataInput">Enter data to encode:</label>
-                <input type="text" id="dataInput" placeholder="Enter text or URL">
-            </div>
+            <h1>Event QR Code Generator</h1>
             
             <div class="input-group">
                 <label for="eventSelect">Select Event:</label>
@@ -82,9 +77,6 @@
             </div>
             
             <button onclick="generateQRCode()">Generate QR Code</button>
-            <button onclick="generateHash()">Generate Hash</button>
-            
-            <div class="hash-result" id="hashOutput"></div>
             
             <div id="qrcode"></div>
         </div>
@@ -116,11 +108,10 @@
             
             // Load events from Firebase
             document.addEventListener('DOMContentLoaded', function() {
-                // Check if Firebase is initialized in eventStorage.js
-                if (typeof loadEvents === 'function') {
+                try {
                     loadEventsForQR();
-                } else {
-                    console.error('Firebase functionality not found. Make sure eventStorage.js is properly loaded.');
+                } catch (error) {
+                    console.error('Error loading events:', error);
                 }
             });
 
@@ -138,10 +129,11 @@
                     const events = await fetchEvents();
                     
                     if (events && events.length > 0) {
-                        events.forEach((event, index) => {
+                        events.forEach((event) => {
                             const option = document.createElement('option');
-                            option.value = index; // Using index as a simple identifier
-                            option.dataset.eventData = JSON.stringify(event); // Store full event data
+                            // Store the actual event ID if available
+                            option.value = event.id || events.indexOf(event).toString();
+                            option.dataset.eventData = JSON.stringify(event);
                             option.textContent = event.title;
                             eventSelect.appendChild(option);
                         });
@@ -159,14 +151,8 @@
 
             // Generate QR code with optional hash
             async function generateQRCode() {
-                const input = document.getElementById('dataInput').value;
                 const eventSelect = document.getElementById('eventSelect');
                 const selectedIndex = eventSelect.selectedIndex;
-                
-                if (!input) {
-                    alert('Please enter some data first');
-                    return;
-                }
                 
                 if (selectedIndex <= 0) {
                     alert('Please select an event');
@@ -180,18 +166,14 @@
                 // Clear previous QR code
                 document.getElementById('qrcode').innerHTML = '';
                 
-                // Generate hash
-                const hash = await generateHash();
-                
                 // Create QR data with event reference
                 const qrData = JSON.stringify({
-                    input: input,
-                    event: {
-                        title: eventData.title,
-                        dateTime: eventData.dateTime,
-                        adminId: eventData.adminId
-                    },
-                    hash: hash
+                    eventId: selectedOption.value,
+                    title: eventData.title,
+                    startDateTime: eventData.startDateTime,
+                    endDateTime: eventData.endDateTime,
+                    location: eventData.location,
+                    createdBy: eventData.createdBy
                 });
                 
                 // Generate QR code
