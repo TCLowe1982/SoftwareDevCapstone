@@ -55,6 +55,15 @@
                 border-radius: 4px;
                 word-wrap: break-word;
             }
+            .url-display {
+                margin-top: 15px;
+                padding: 10px;
+                background-color: #f5f5f5;
+                border-radius: 4px;
+                word-wrap: break-word;
+                font-size: 12px;
+                color: #555;
+            }
         </style>
         <script type="module">
             import { fetchEvents } from '../JS/eventStorage.js';
@@ -166,25 +175,38 @@
                 // Clear previous QR code
                 document.getElementById('qrcode').innerHTML = '';
                 
-                // Create QR data with event reference
-                const qrData = JSON.stringify({
+                // Create event data object
+                const eventDataToEncode = {
                     eventId: selectedOption.value,
                     title: eventData.title,
                     startDateTime: eventData.startDateTime,
                     endDateTime: eventData.endDateTime,
                     location: eventData.location,
                     createdBy: eventData.createdBy
-                });
+                };
                 
-                // Generate QR code
+                // Create URL with hash fragment containing event data
+                // Note: Using the window.location.origin to get the base URL dynamically
+                const baseUrl = window.location.origin + "/HTML/recordAttendance.html";
+                const url = baseUrl + "#" + encodeURIComponent(JSON.stringify(eventDataToEncode));
+                
+                // Generate QR code that links to the attendance recording page
                 new QRCode(document.getElementById('qrcode'), {
-                    text: qrData,
+                    text: url,
                     width: 200,
                     height: 200,
                     colorDark: "#000000",
                     colorLight: "#ffffff",
                     correctLevel: QRCode.CorrectLevel.H
                 });
+                
+                // Display the URL below the QR code (optional)
+                const urlDisplay = document.createElement('div');
+                urlDisplay.classList.add('url-display');
+                urlDisplay.style.marginTop = '10px';
+                urlDisplay.style.wordBreak = 'break-all';
+                urlDisplay.innerHTML = `<small>URL: ${url}</small>`;
+                document.getElementById('qrcode').appendChild(urlDisplay);
             }
         </script>
     </body>
