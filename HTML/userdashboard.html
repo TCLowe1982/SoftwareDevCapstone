@@ -13,54 +13,51 @@
     <div class="container">
         <h2>Events Attended</h2>
         <ul id="event-list" class="event-list">
-            <!-- Event items will be dynamically added here -->
         </ul>
     </div>
 </body>
 </html>
 
-<script>
-const eventsAttended = [
-    {
-        name: "Deluce Gallery: Artaxis National Juried Exhibition",
-        date: "March 10, 2025",
-        details: "The Artaxis National Juried Exhibition will highlight contemporary ceramics created by various artists."
-    },
-    {
-        name: "Women's Leadership Summit",
-        date: "July 22, 2025",
-        details: "The EmpowerHER Summit is dedicated to fostering leadership by bringing together women in leadership roles and those aspiring to lead."
-    },
-    {
-        name: "Northwest Week: Picnic Palooza",
-        date: "September 5, 2025",
-        details: "Join the Student Activities Council as it continues Northwest Week activities with a Picnic Palooza, featuring several food trucks offering free food, including El Nopal and Kool Kats."
+<script type = "module">
+    import { fetchEvents } from "../JS/eventStorage.js";
+
+async function getEvents() {
+    const eventList = document.getElementById("event-list");
+    eventList.innerHTML = "<p>Loading events...</p>";
+
+    try {
+        const events = await fetchEvents();
+
+        if (events.length === 0) {
+            eventList.innerHTML = "<p>No events found.</p>";
+            return;
+        }
+
+        eventList.innerHTML = events.map(event => createEventCard(event)).join("");
+    } catch (error) {
+        console.error("Error rendering events:", error);
+        eventList.innerHTML = "<p>Failed to load events.</p>";
     }
-];
+}
 
 function createEventCard(event) {
     return `
         <li class="flip-card">
             <div class="flip-card-inner">
-                <!-- Front of the card -->
                 <div class="flip-card-front">
-                    <h3>${event.name}</h3>
-                    <p>${event.date}</p>
+                    <h3>${event.title}</h3>
+                    <p>Location: ${event.location}</p>
                 </div>
-                <!-- Back of the card -->
                 <div class="flip-card-back">
                     <h3>Details</h3>
-                    <p>${event.details}</p>
+                    <p>${event.description}</p>
+                    <p> Time: ${event.startDateTime} - ${event.endDateTime}</p>
                 </div>
             </div>
         </li>
     `;
 }
 
-function renderEvents() {
-    const eventList = document.getElementById("event-list");
-    eventList.innerHTML = eventsAttended.map(createEventCard).join("");
-}
+document.addEventListener("DOMContentLoaded", getEvents);
 
-document.addEventListener("DOMContentLoaded", renderEvents);
 </script>
