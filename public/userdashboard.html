@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Dashboard</title>
-    <link rel="stylesheet" href="dashboard.css"> 
+    <link rel="stylesheet" href="../CSS/dashboard.css"> 
     <script type="module" src="userdashboard.js"></script>
 
 </head>
@@ -13,9 +13,51 @@
     <div class="container">
         <h2>Events Attended</h2>
         <ul id="event-list" class="event-list">
-            <!-- Event items will be dynamically added here -->
         </ul>
     </div>
 </body>
 </html>
 
+<script type = "module">
+    import { fetchEvents } from "../JS/eventStorage.js";
+
+async function getEvents() {
+    const eventList = document.getElementById("event-list");
+    eventList.innerHTML = "<p>Loading events...</p>";
+
+    try {
+        const events = await fetchEvents();
+
+        if (events.length === 0) {
+            eventList.innerHTML = "<p>No events found.</p>";
+            return;
+        }
+
+        eventList.innerHTML = events.map(event => createEventCard(event)).join("");
+    } catch (error) {
+        console.error("Error rendering events:", error);
+        eventList.innerHTML = "<p>Failed to load events.</p>";
+    }
+}
+
+function createEventCard(event) {
+    return `
+        <li class="flip-card">
+            <div class="flip-card-inner">
+                <div class="flip-card-front">
+                    <h3>${event.title}</h3>
+                    <p>Location: ${event.location}</p>
+                </div>
+                <div class="flip-card-back">
+                    <h3>Details</h3>
+                    <p>${event.description}</p>
+                    <p> Time: ${event.startDateTime} - ${event.endDateTime}</p>
+                </div>
+            </div>
+        </li>
+    `;
+}
+
+document.addEventListener("DOMContentLoaded", getEvents);
+
+</script>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administration Panel</title>
+    
+    <!-- FullCalendar CSS -->  
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.11.3/main.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../CSS/calendar.css">
+    
+</head>
+<body>
+
+    <!--Side Bar-->
+    <div class="sidebar">
+        <a href="userdashboard.html">Admin Dashboard</a>
+        <a href="../HTML/EventHistory.html">Event History</a>
+        <a href="../HTML/Login.html">Log Out</a>
+      </div>
+      
+      <!-- Main Content -->
+      <div class="content">
+        <div class="header">
+            <h1 class="header-title">CALENDAR VIEW</h1>
+        <div class = "header-actions">
+          <a href="#" id="openEventModal" class = "action-link">
+            <img src="../Images/add-6491203_1280.png" height="20px" width="20px" alt="Add Event">
+            <span>Add Event</span>
+          </a>
+          <a href="editEvent.html" class = "action-link">
+            <img src="../Images/pencil-161946_1280.png" height="22px" width="20px" alt="Edit Event">
+            <span>Edit Event</span>
+          </a>
+        </div>
+        </div>
+      
+        <div class="container">
+          <div id="calendar"></div>
+        </div>
+      </div>
+
+    <div id="eventModal" class="modal">
+        <div class="modal-content">
+            <h3>Add Event</h3>
+            <input type="text" id="eventTitle" placeholder="Event Name">
+            <input type="date" id="eventDate">
+            <input type="time" id="startTime" placeholder="Start Time">
+            <input type="time" id="endTime" placeholder="End Time">
+            <input type="text" id="eventLocation" placeholder="Location">
+            <textarea id="eventDescription" placeholder="Description" maxlength="250"></textarea>
+            <label>
+                <input type="checkbox" id="allDay"> All Day
+            </label>
+            <button id="saveEvent">Save Event</button>
+            <button onclick="closeModal()">Cancel</button>
+        </div>
+    </div>
+    
+
+
+    <!-- Load FullCalendar JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.11.3/main.min.js"></script>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@6.1.15/index.global.min.js'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+    <!-- Import eventStorage.js to store event data -->
+
+    <script type = "module">
+        import { storeEvent, fetchEvents } from "../JS/eventStorage.js";
+        document.addEventListener('DOMContentLoaded', async function () {
+            const storedEvents = await fetchEvents();
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'timeGridWeek',
+                events: storedEvents.map(event => ({
+                    title: `${event.title} @ ${event.location}`,
+                    start: event.startDateTime,
+                    end: event.endDateTime,
+                    allDay: false
+                })),
+                selectable: true,
+                allDaySlot: false,
+                slotDuration: '00:30:00',              
+                height: 'auto',                 
+                headerToolbar: {
+
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay addEventButton'
+                 },
+            customButtons: {
+                addEventButton: {
+                    text: '+',
+                    click: function () {
+                        openModal();
+                     }
+                }
+            },
+        });
+
+    calendar.render();
+
+    document.getElementById('openEventModal').addEventListener('click', function (e) {
+        e.preventDefault();
+        openModal();
+    });
+
+    document.getElementById('saveEvent').addEventListener('click', function () {
+        var title = document.getElementById('eventTitle').value;
+        var date = document.getElementById('eventDate').value;
+        var startTime = document.getElementById('startTime').value;
+        var endTime = document.getElementById('endTime').value;
+        var location = document.getElementById('eventLocation').value;
+        var description = document.getElementById('eventDescription').value;
+        var allDay = document.getElementById('allDay').checked;
+
+        if (title && date && (allDay || (startTime && endTime)) && location) {
+            var startDateTime = allDay ? date : `${date}T${startTime}`;
+            var endDateTime = allDay ? date : `${date}T${endTime}`;
+
+            storeEvent(title, startDateTime, endDateTime, location, description);  // Save event data
+            calendar.addEvent({
+                title: `${title} @ ${location}`,
+                start: startDateTime,
+                end: endDateTime,
+                allDay: allDay
+            });
+            closeModal();
+        } else {
+            alert('Please fill all fields.');
+        }
+    });
+});
+
+            function openModal() {
+            document.getElementById('eventModal').style.display = 'flex';
+            document.getElementById('eventTitle').value = '';
+            document.getElementById('eventDate').value = '';
+            document.getElementById('startTime').value = '';
+            document.getElementById('endTime').value = '';
+            document.getElementById('eventLocation').value = '';
+            document.getElementById('eventDescription').value = '';
+            document.getElementById('allDay').checked = false;
+        }
+
+        function closeModal() {
+            document.getElementById('eventModal').style.display = 'none';
+        }
+
+        // Make closeModal accessible globally
+        window.closeModal = closeModal;
+
+    </script>
+</body>
+</html>
