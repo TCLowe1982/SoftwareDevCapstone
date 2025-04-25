@@ -33,19 +33,29 @@ function getCurrentUser() {
 // Function to store event in Firebase
 async function storeEvent(eventTitle, startDateTime, endDateTime, location, description) {
     try{
-    const user = await getCurrentUser();
-    const adminId = user.uid;
-    const eventsRef = ref(db, 'events');  
-    const newEventRef = push(eventsRef); // Generate unique key
+        const user = await getCurrentUser();
+        const adminId = user.uid;
+        const eventsRef = ref(db, 'events');
+        const counterRef = ref(db, 'eventCounter');
 
-    await set(newEventRef, {
-        title: eventTitle,
-        startDateTime: startDateTime,
-        endDateTime: endDateTime,
-        location: location,
-        description: description,
-        createdBy: adminId,
-    })
+        const snapshot = await get(counterRef);
+        let eventId = 1;
+
+        if (snapshot.exists()) {
+            eventId = snapshot.val();  // Fetch the current event ID count
+        }
+
+        // Create a new event using the sequential ID
+        const newEventRef = push(eventsRef); 
+        await set(newEventRef, {
+            eventId, 
+            title: eventTitle,
+            startDateTime,
+            endDateTime,
+            location,
+            description,
+            createdBy: adminId
+        });
 
         console.log("Event stored successfully in Firebase!");
 
