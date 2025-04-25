@@ -1,322 +1,394 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Event Attendance</title>
-    <link rel="stylesheet" href="stylesheet.css">
+    <link rel="stylesheet" href="stylesheet.css" />
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        .container {
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-        .event-details {
-            margin-bottom: 20px;
-            padding: 15px;
-            background-color: #f5f5f5;
-            border-radius: 5px;
-        }
-        .attendance-form {
-            margin-top: 20px;
-        }
-        button {
-            padding: 10px 15px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        .message {
-            margin-top: 20px;
-            padding: 10px;
-            border-radius: 4px;
-        }
-        .success {
-            background-color: #d4edda;
-            color: #155724;
-        }
-        .error {
-            background-color: #f8d7da;
-            color: #721c24;
-        }
-        .auth-tabs {
-            display: flex;
-            margin-bottom: 20px;
-            border-bottom: 1px solid #ddd;
-        }
-        .tab-btn {
-            background: none;
-            border: none;
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            opacity: 0.7;
-            color: #333;
-        }
-        .tab-btn:hover {
-            opacity: 1;
-            background-color: #f5f5f5;
-        }
-        .tab-btn.active {
-            opacity: 1;
-            border-bottom: 3px solid #4CAF50;
-            font-weight: bold;
-        }
-        #loginForm, #registerForm {
-            padding-top: 10px;
-        }
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+      .container {
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      .event-details {
+        margin-bottom: 20px;
+        padding: 15px;
+        background-color: #f5f5f5;
+        border-radius: 5px;
+      }
+      .attendance-form {
+        margin-top: 20px;
+      }
+      button {
+        padding: 10px 15px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+      button:hover {
+        background-color: #45a049;
+      }
+      .message {
+        margin-top: 20px;
+        padding: 10px;
+        border-radius: 4px;
+      }
+      .success {
+        background-color: #d4edda;
+        color: #155724;
+      }
+      .error {
+        background-color: #f8d7da;
+        color: #721c24;
+      }
+      .auth-tabs {
+        display: flex;
+        margin-bottom: 20px;
+        border-bottom: 1px solid #ddd;
+      }
+      .tab-btn {
+        background: none;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        opacity: 0.7;
+        color: #333;
+      }
+      .tab-btn:hover {
+        opacity: 1;
+        background-color: #f5f5f5;
+      }
+      .tab-btn.active {
+        opacity: 1;
+        border-bottom: 3px solid #4caf50;
+        font-weight: bold;
+      }
+      #loginForm,
+      #registerForm {
+        padding-top: 10px;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <h1>Event Attendance</h1>
-        
-        <div id="eventDetails" class="event-details">
-            <p>Loading event details...</p>
+      <h1>Event Attendance</h1>
+
+      <div id="eventDetails" class="event-details">
+        <p>Loading event details...</p>
+      </div>
+
+      <div class="attendance-form">
+        <div id="userLoginSection">
+          <!-- Login/Register tabs -->
+          <div class="auth-tabs">
+            <button id="loginTabBtn" class="tab-btn active">Login</button>
+            <button id="registerTabBtn" class="tab-btn">Register</button>
+          </div>
+
+          <!-- Login form -->
+          <div id="loginForm">
+            <h2>Login to record attendance</h2>
+            <input
+              type="email"
+              id="userEmail"
+              placeholder="Email"
+              required
+            /><br /><br />
+            <input
+              type="password"
+              id="userPassword"
+              placeholder="Password"
+              required
+            /><br /><br />
+            <button id="loginBtn">Login</button>
+          </div>
+
+          <!-- Registration form -->
+          <div id="registerForm" style="display: none">
+            <h2>Create an account</h2>
+            <input
+              type="text"
+              id="fullName"
+              placeholder="Full Name"
+              required
+            /><br /><br />
+            <input
+              type="email"
+              id="registerEmail"
+              placeholder="Email"
+              required
+            /><br /><br />
+            <input
+              type="password"
+              id="registerPassword"
+              placeholder="Password"
+              required
+            /><br /><br />
+            <input
+              type="password"
+              id="confirmPassword"
+              placeholder="Confirm Password"
+              required
+            /><br /><br />
+            <button id="registerBtn">Register</button>
+          </div>
         </div>
-        
-        <div class="attendance-form">
-            <div id="userLoginSection">
-                <!-- Login/Register tabs -->
-                <div class="auth-tabs">
-                    <button id="loginTabBtn" class="tab-btn active">Login</button>
-                    <button id="registerTabBtn" class="tab-btn">Register</button>
-                </div>
-                
-                <!-- Login form -->
-                <div id="loginForm">
-                    <h2>Login to record attendance</h2>
-                    <input type="email" id="userEmail" placeholder="Email" required><br><br>
-                    <input type="password" id="userPassword" placeholder="Password" required><br><br>
-                    <button id="loginBtn">Login</button>
-                </div>
-                
-                <!-- Registration form -->
-                <div id="registerForm" style="display: none;">
-                    <h2>Create an account</h2>
-                    <input type="email" id="registerEmail" placeholder="Email" required><br><br>
-                    <input type="password" id="registerPassword" placeholder="Password" required><br><br>
-                    <input type="password" id="confirmPassword" placeholder="Confirm Password" required><br><br>
-                    <button id="registerBtn">Register</button>
-                </div>
-            </div>
-            
-            <div id="attendanceSection" style="display: none;">
-                <h2>Record Your Attendance</h2>
-                <p>Click the button below to record your attendance for this event.</p>
-                <button id="recordAttendanceBtn">Record My Attendance</button>
-            </div>
+
+        <div id="attendanceSection" style="display: none">
+          <h2>Record Your Attendance</h2>
+          <p>
+            Click the button below to record your attendance for this event.
+          </p>
+          <button id="recordAttendanceBtn">Record My Attendance</button>
         </div>
-        
-        <div id="message" class="message" style="display: none;"></div>
+      </div>
+
+      <div id="message" class="message" style="display: none"></div>
     </div>
 
     <!-- Firebase SDK -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-app.js";
-        import { getDatabase, ref, push, set, get } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-database.js";  
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-auth.js";
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-app.js";
+      import {
+        getDatabase,
+        ref,
+        push,
+        set,
+        get,
+      } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-database.js";
+      import {
+        getAuth,
+        signInWithEmailAndPassword,
+        createUserWithEmailAndPassword,
+        onAuthStateChanged,
+      } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-auth.js";
 
-        // Firebase Configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyCGgv9TEVL5OxG-xNZjumABZanVsQ-CgvM",
-            authDomain: "attendance-management-sy-b48d6.firebaseapp.com",
-            databaseURL: "https://attendance-management-sy-b48d6-default-rtdb.firebaseio.com",
-            projectId: "attendance-management-sy-b48d6",
-            storageBucket: "attendance-management-sy-b48d6.firebasestorage.app",
-            messagingSenderId: "746217693554",
-            appId: "1:746217693554:web:d5a2dfb1a00ed98344fdeb"
-        };
+      // Firebase Configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyCGgv9TEVL5OxG-xNZjumABZanVsQ-CgvM",
+        authDomain: "attendance-management-sy-b48d6.firebaseapp.com",
+        databaseURL:
+          "https://attendance-management-sy-b48d6-default-rtdb.firebaseio.com",
+        projectId: "attendance-management-sy-b48d6",
+        storageBucket: "attendance-management-sy-b48d6.firebasestorage.app",
+        messagingSenderId: "746217693554",
+        appId: "1:746217693554:web:d5a2dfb1a00ed98344fdeb",
+      };
 
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth();
-        const db = getDatabase(app);
-        
-        let eventData = null;
-        
-        // Decode the event data from URL
-        function getEventDataFromURL() {
-            const hashFragment = window.location.hash.substring(1);
-            if (hashFragment) {
-                try {
-                    return JSON.parse(decodeURIComponent(hashFragment));
-                } catch (e) {
-                    console.error("Error parsing event data:", e);
-                    return null;
-                }
-            }
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth();
+      const db = getDatabase(app);
+
+      let eventData = null;
+
+      // Decode the event data from URL
+      function getEventDataFromURL() {
+        const hashFragment = window.location.hash.substring(1);
+        if (hashFragment) {
+          try {
+            return JSON.parse(decodeURIComponent(hashFragment));
+          } catch (e) {
+            console.error("Error parsing event data:", e);
             return null;
+          }
         }
-        
-        // Display event details
-        function displayEventDetails() {
-            const eventDetailsElement = document.getElementById("eventDetails");
-            
-            if (eventData) {
-                const start = new Date(eventData.startDateTime).toLocaleString();
-                const end = new Date(eventData.endDateTime).toLocaleString();
-                
-                eventDetailsElement.innerHTML = `
+        return null;
+      }
+
+      // Display event details
+      function displayEventDetails() {
+        const eventDetailsElement = document.getElementById("eventDetails");
+
+        if (eventData) {
+          const start = new Date(eventData.startDateTime).toLocaleString();
+          const end = new Date(eventData.endDateTime).toLocaleString();
+
+          eventDetailsElement.innerHTML = `
                     <h2>${eventData.title}</h2>
                     <p><strong>Start:</strong> ${start}</p>
                     <p><strong>End:</strong> ${end}</p>
                     <p><strong>Location:</strong> ${eventData.location}</p>
                 `;
-            } else {
-                eventDetailsElement.innerHTML = `
+        } else {
+          eventDetailsElement.innerHTML = `
                     <p class="error">Error: No event data found.</p>
                     <p>The QR code may be invalid or missing event information.</p>
                 `;
-            }
         }
-        
-        // Check if user is logged in
-        function checkAuthStatus() {
-            onAuthStateChanged(auth, (user) => {
-                if (user) {
-                    // User is signed in
-                    document.getElementById("userLoginSection").style.display = "none";
-                    document.getElementById("attendanceSection").style.display = "block";
-                } else {
-                    // No user is signed in
-                    document.getElementById("userLoginSection").style.display = "block";
-                    document.getElementById("attendanceSection").style.display = "none";
-                }
+      }
+
+      // Check if user is logged in
+      function checkAuthStatus() {
+        onAuthStateChanged(auth, (user) => {
+          if (user) {
+            // User is signed in
+            document.getElementById("userLoginSection").style.display = "none";
+            document.getElementById("attendanceSection").style.display =
+              "block";
+          } else {
+            // No user is signed in
+            document.getElementById("userLoginSection").style.display = "block";
+            document.getElementById("attendanceSection").style.display = "none";
+          }
+        });
+      }
+
+      // Login functionality
+      document.getElementById("loginBtn").addEventListener("click", () => {
+        const email = document.getElementById("userEmail").value;
+        const password = document.getElementById("userPassword").value;
+
+        signInWithEmailAndPassword(auth, email, password)
+          .then((userCredential) => {
+            // Successfully signed in
+            const user = userCredential.user;
+            showMessage("Login successful!", "success");
+          })
+          .catch((error) => {
+            showMessage(`Login error: ${error.message}`, "error");
+          });
+      });
+
+      // Record attendance
+      document
+        .getElementById("recordAttendanceBtn")
+        .addEventListener("click", async () => {
+          try {
+            if (!eventData || !eventData.eventId) {
+              showMessage(
+                "Invalid event data. Cannot record attendance.",
+                "error"
+              );
+              return;
+            }
+
+            const user = auth.currentUser;
+            if (!user) {
+              showMessage("Please log in to record attendance", "error");
+              return;
+            }
+
+            // Create attendance record in Firebase
+            const attendanceRef = ref(db, `attendance/${eventData.eventId}`);
+            const userAttendanceRef = push(attendanceRef);
+
+            await set(userAttendanceRef, {
+              userId: user.uid,
+              userEmail: user.email,
+              timestamp: new Date().toISOString(),
+              eventId: eventData.eventId,
+              eventTitle: eventData.title,
             });
+
+            showMessage("Attendance successfully recorded!", "success");
+
+            // Disable the button after successful recording
+            document.getElementById("recordAttendanceBtn").disabled = true;
+            document.getElementById("recordAttendanceBtn").textContent =
+              "Attendance Recorded";
+          } catch (error) {
+            showMessage(
+              `Error recording attendance: ${error.message}`,
+              "error"
+            );
+          }
+        });
+
+      // Show message function
+      function showMessage(message, type) {
+        const messageElement = document.getElementById("message");
+        messageElement.textContent = message;
+        messageElement.className = `message ${type}`;
+        messageElement.style.display = "block";
+
+        // Auto-hide after 5 seconds
+        setTimeout(() => {
+          messageElement.style.display = "none";
+        }, 5000);
+      }
+
+      // Tab switching functionality
+      document.getElementById("loginTabBtn").addEventListener("click", () => {
+        document.getElementById("loginTabBtn").classList.add("active");
+        document.getElementById("registerTabBtn").classList.remove("active");
+        document.getElementById("loginForm").style.display = "block";
+        document.getElementById("registerForm").style.display = "none";
+      });
+
+      document
+        .getElementById("registerTabBtn")
+        .addEventListener("click", () => {
+          document.getElementById("registerTabBtn").classList.add("active");
+          document.getElementById("loginTabBtn").classList.remove("active");
+          document.getElementById("registerForm").style.display = "block";
+          document.getElementById("loginForm").style.display = "none";
+        });
+
+      // Registration functionality
+      document.getElementById("registerBtn").addEventListener("click", () => {
+        const fullName = document.getElementById("fullName").value; // Get full name
+        const email = document.getElementById("registerEmail").value;
+        const password = document.getElementById("registerPassword").value;
+        const confirmPassword =
+          document.getElementById("confirmPassword").value;
+
+        // Password validation
+        if (password !== confirmPassword) {
+          showMessage("Passwords do not match", "error");
+          return;
         }
-        
-        // Login functionality
-        document.getElementById("loginBtn").addEventListener("click", () => {
-            const email = document.getElementById("userEmail").value;
-            const password = document.getElementById("userPassword").value;
-            
-            signInWithEmailAndPassword(auth, email, password)
-                .then((userCredential) => {
-                    // Successfully signed in
-                    const user = userCredential.user;
-                    showMessage("Login successful!", "success");
-                })
-                .catch((error) => {
-                    showMessage(`Login error: ${error.message}`, "error");
-                });
-        });
-        
-        // Record attendance
-        document.getElementById("recordAttendanceBtn").addEventListener("click", async () => {
-            try {
-                if (!eventData || !eventData.eventId) {
-                    showMessage("Invalid event data. Cannot record attendance.", "error");
-                    return;
-                }
-                
-                const user = auth.currentUser;
-                if (!user) {
-                    showMessage("Please log in to record attendance", "error");
-                    return;
-                }
-                
-                // Create attendance record in Firebase
-                const attendanceRef = ref(db, `attendance/${eventData.eventId}`);
-                const userAttendanceRef = push(attendanceRef);
-                
-                await set(userAttendanceRef, {
-                    userId: user.uid,
-                    userEmail: user.email,
-                    timestamp: new Date().toISOString(),
-                    eventId: eventData.eventId,
-                    eventTitle: eventData.title
-                });
-                
-                showMessage("Attendance successfully recorded!", "success");
-                
-                // Disable the button after successful recording
-                document.getElementById("recordAttendanceBtn").disabled = true;
-                document.getElementById("recordAttendanceBtn").textContent = "Attendance Recorded";
-                
-            } catch (error) {
-                showMessage(`Error recording attendance: ${error.message}`, "error");
-            }
-        });
-        
-        // Show message function
-        function showMessage(message, type) {
-            const messageElement = document.getElementById("message");
-            messageElement.textContent = message;
-            messageElement.className = `message ${type}`;
-            messageElement.style.display = "block";
-            
-            // Auto-hide after 5 seconds
-            setTimeout(() => {
-                messageElement.style.display = "none";
-            }, 5000);
-        }
-        
-        // Tab switching functionality
-        document.getElementById("loginTabBtn").addEventListener("click", () => {
-            document.getElementById("loginTabBtn").classList.add("active");
-            document.getElementById("registerTabBtn").classList.remove("active");
-            document.getElementById("loginForm").style.display = "block";
-            document.getElementById("registerForm").style.display = "none";
-        });
 
-        document.getElementById("registerTabBtn").addEventListener("click", () => {
-            document.getElementById("registerTabBtn").classList.add("active");
-            document.getElementById("loginTabBtn").classList.remove("active");
-            document.getElementById("registerForm").style.display = "block";
-            document.getElementById("loginForm").style.display = "none";
-        });
+        // Create the user
+        createUserWithEmailAndPassword(auth, email, password)
+          .then((userCredential) => {
+            const user = userCredential.user;
 
-        // Registration functionality
-        document.getElementById("registerBtn").addEventListener("click", () => {
-            const email = document.getElementById("registerEmail").value;
-            const password = document.getElementById("registerPassword").value;
-            const confirmPassword = document.getElementById("confirmPassword").value;
-            
-            // Password validation
-            if (password !== confirmPassword) {
-                showMessage("Passwords do not match", "error");
-                return;
-            }
-            
-            // Import the createUserWithEmailAndPassword function
-            import("https://www.gstatic.com/firebasejs/11.3.0/firebase-auth.js")
-                .then(module => {
-                    const { createUserWithEmailAndPassword } = module;
-                    
-                    // Create the user
-                    createUserWithEmailAndPassword(auth, email, password)
-                        .then((userCredential) => {
-                            // Successfully registered and signed in
-                            const user = userCredential.user;
-                            showMessage("Registration successful! You are now logged in.", "success");
-                            
-                            // The onAuthStateChanged listener will automatically show the attendance section
-                        })
-                        .catch((error) => {
-                            showMessage(`Registration error: ${error.message}`, "error");
-                        });
-                });
-        });
+            // Save the user's full name and other data in the Firebase database
+            const userRef = ref(db, "users/" + user.uid);
+            set(userRef, {
+              fullName: fullName,
+              email: email,
+              uid: user.uid,
+            })
+              .then(() => {
+                // Successfully registered and saved user details
+                showMessage(
+                  "Registration successful! You are now logged in.",
+                  "success"
+                );
 
-        // Initialize on page load
-        window.addEventListener("DOMContentLoaded", () => {
-            eventData = getEventDataFromURL();
-            displayEventDetails();
-            checkAuthStatus();
-        });
+                // The onAuthStateChanged listener will automatically show the attendance section
+              })
+              .catch((error) => {
+                showMessage(
+                  `Error saving user data: ${error.message}`,
+                  "error"
+                );
+              });
+          })
+          .catch((error) => {
+            showMessage(`Registration error: ${error.message}`, "error");
+          });
+      });
+
+      // Initialize on page load
+      window.addEventListener("DOMContentLoaded", () => {
+        eventData = getEventDataFromURL();
+        displayEventDetails();
+        checkAuthStatus();
+      });
     </script>
-</body>
+  </body>
 </html>
