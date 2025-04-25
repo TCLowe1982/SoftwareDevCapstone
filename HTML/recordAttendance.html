@@ -51,6 +51,32 @@
             background-color: #f8d7da;
             color: #721c24;
         }
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            opacity: 0.7;
+            color: #333;
+        }
+        .tab-btn:hover {
+            opacity: 1;
+            background-color: #f5f5f5;
+        }
+        .tab-btn.active {
+            opacity: 1;
+            border-bottom: 3px solid #4CAF50;
+            font-weight: bold;
+        }
+        #loginForm, #registerForm {
+            padding-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -63,11 +89,28 @@
         
         <div class="attendance-form">
             <div id="userLoginSection">
-                <h2>Please login to record attendance</h2>
-                <input type="email" id="userEmail" placeholder="Email" required><br><br>
-                <input type="password" id="userPassword" placeholder="Password" required><br><br>
-                <button id="loginBtn">Login</button>
-                <p>Don't have an account? <a href="register.html">Register</a></p>
+                <!-- Login/Register tabs -->
+                <div class="auth-tabs">
+                    <button id="loginTabBtn" class="tab-btn active">Login</button>
+                    <button id="registerTabBtn" class="tab-btn">Register</button>
+                </div>
+                
+                <!-- Login form -->
+                <div id="loginForm">
+                    <h2>Login to record attendance</h2>
+                    <input type="email" id="userEmail" placeholder="Email" required><br><br>
+                    <input type="password" id="userPassword" placeholder="Password" required><br><br>
+                    <button id="loginBtn">Login</button>
+                </div>
+                
+                <!-- Registration form -->
+                <div id="registerForm" style="display: none;">
+                    <h2>Create an account</h2>
+                    <input type="email" id="registerEmail" placeholder="Email" required><br><br>
+                    <input type="password" id="registerPassword" placeholder="Password" required><br><br>
+                    <input type="password" id="confirmPassword" placeholder="Confirm Password" required><br><br>
+                    <button id="registerBtn">Register</button>
+                </div>
             </div>
             
             <div id="attendanceSection" style="display: none;">
@@ -84,7 +127,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-app.js";
         import { getDatabase, ref, push, set, get } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-database.js";  
-        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-auth.js";
 
         // Firebase Configuration
         const firebaseConfig = {
@@ -221,6 +264,53 @@
             }, 5000);
         }
         
+        // Tab switching functionality
+        document.getElementById("loginTabBtn").addEventListener("click", () => {
+            document.getElementById("loginTabBtn").classList.add("active");
+            document.getElementById("registerTabBtn").classList.remove("active");
+            document.getElementById("loginForm").style.display = "block";
+            document.getElementById("registerForm").style.display = "none";
+        });
+
+        document.getElementById("registerTabBtn").addEventListener("click", () => {
+            document.getElementById("registerTabBtn").classList.add("active");
+            document.getElementById("loginTabBtn").classList.remove("active");
+            document.getElementById("registerForm").style.display = "block";
+            document.getElementById("loginForm").style.display = "none";
+        });
+
+        // Registration functionality
+        document.getElementById("registerBtn").addEventListener("click", () => {
+            const email = document.getElementById("registerEmail").value;
+            const password = document.getElementById("registerPassword").value;
+            const confirmPassword = document.getElementById("confirmPassword").value;
+            
+            // Password validation
+            if (password !== confirmPassword) {
+                showMessage("Passwords do not match", "error");
+                return;
+            }
+            
+            // Import the createUserWithEmailAndPassword function
+            import("https://www.gstatic.com/firebasejs/11.3.0/firebase-auth.js")
+                .then(module => {
+                    const { createUserWithEmailAndPassword } = module;
+                    
+                    // Create the user
+                    createUserWithEmailAndPassword(auth, email, password)
+                        .then((userCredential) => {
+                            // Successfully registered and signed in
+                            const user = userCredential.user;
+                            showMessage("Registration successful! You are now logged in.", "success");
+                            
+                            // The onAuthStateChanged listener will automatically show the attendance section
+                        })
+                        .catch((error) => {
+                            showMessage(`Registration error: ${error.message}`, "error");
+                        });
+                });
+        });
+
         // Initialize on page load
         window.addEventListener("DOMContentLoaded", () => {
             eventData = getEventDataFromURL();
